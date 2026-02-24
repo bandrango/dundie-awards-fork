@@ -38,3 +38,8 @@ out/
 
 ### MacOS ###
 .DS_Store
+
+# Logs
+logs/
+*.log
+*.json.log

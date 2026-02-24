@@ -41,3 +41,10 @@ management:
   info:
     env:
       enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.ninjaone: DEBUG
+    org.springframework: INFO
+    org.hibernate: WARN
