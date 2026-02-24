@@ -14,47 +14,40 @@ import java.nio.file.Paths;
 @Component
 public class LoggingConfigurationValidator {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoggingConfigurationValidator.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoggingConfigurationValidator.class);
 
-    @Value("${logging.level.root:INFO}")
-    private String rootLogLevel;
+	@Value("${logging.level.root:INFO}")
+	private String rootLogLevel;
 
-    @Value("${logging.level.com.ninjaone:DEBUG}")
-    private String appLogLevel;
+	@Value("${logging.level.com.ninjaone:DEBUG}")
+	private String appLogLevel;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void validateLoggingConfiguration() {
-        logger.info("========== Logging Configuration Validation ==========");
-        
-        try {
-            // Check logging levels
-            logger.info("Root logging level configured: {}", rootLogLevel);
-            logger.info("Logging level for com.ninjaone: {}", appLogLevel);
-            
-            // Check if logs directory exists
-            String logPath = "logs";
-            if (Files.exists(Paths.get(logPath))) {
-                logger.info("Logs directory exists at: {}", logPath);
-                long totalSize = Files.walk(Paths.get(logPath))
-                        .map(java.nio.file.Path::toFile)
-                        .mapToLong(java.io.File::length)
-                        .sum();
-                logger.info("Total size of log files: {} bytes", totalSize);
-            } else {
-                logger.warn("Logs directory DOES NOT exist at: {}", logPath);
-                logger.info("Directory will be created automatically when writing logs");
-            }
-            
-            // Check Logback configuration
-            LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-            logger.info("Logging application name: {}", loggerContext.getName());
-            logger.info("Number of appenders configured: {}", loggerContext.getLoggerList().size());
-            
-            logger.info("Logging configuration validated successfully");
-            logger.info("======================================================");
-            
-        } catch (Exception e) {
-            logger.error("Error validating logging configuration: {}", e.getMessage(), e);
-        }
-    }
+	@EventListener(ApplicationReadyEvent.class)
+	public void validateLoggingConfiguration() {
+
+		try {
+			// Check logging levels
+			logger.info("Root logging level configured: {}", rootLogLevel);
+			logger.info("Logging level for com.ninjaone: {}", appLogLevel);
+
+			// Check if logs directory exists
+			String logPath = "logs";
+			if (Files.exists(Paths.get(logPath))) {
+				logger.info("Logs directory exists at: {}", logPath);
+				long totalSize = Files.walk(Paths.get(logPath)).map(java.nio.file.Path::toFile)
+						.mapToLong(java.io.File::length).sum();
+				logger.info("Total size of log files: {} bytes", totalSize);
+			} else {
+				logger.warn("Logs directory DOES NOT exist at: {}", logPath);
+				logger.info("Directory will be created automatically when writing logs");
+			}
+
+			// Check Logback configuration
+			LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+			logger.info("Logging application name: {}", loggerContext.getName());
+			logger.info("Number of appenders configured: {}", loggerContext.getLoggerList().size());
+		} catch (Exception e) {
+			logger.error("Error validating logging configuration: {}", e.getMessage(), e);
+		}
+	}
 }
