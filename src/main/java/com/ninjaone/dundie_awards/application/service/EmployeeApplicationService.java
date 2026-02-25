@@ -40,6 +40,7 @@ public class EmployeeApplicationService {
      * Use Case: Get All Employees
      * Retrieves a list of all employees in the system
      */
+    @Transactional(readOnly = true)
     public List<EmployeeDTO> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         return employees.stream()
@@ -55,6 +56,7 @@ public class EmployeeApplicationService {
      * @return EmployeeDTO if found
      * @throws EmployeeNotFoundException if employee not found
      */
+    @Transactional(readOnly = true)
     public EmployeeDTO getEmployeeById(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isEmpty()) {
@@ -135,6 +137,7 @@ public class EmployeeApplicationService {
      * Use Case: Get Employee Count
      * Returns the total number of employees in the system
      */
+    @Transactional(readOnly = true)
     public long getEmployeeCount() {
         return employeeRepository.count();
     }

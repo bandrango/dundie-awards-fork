@@ -31,7 +31,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     @Override
     @Auditable(action = "Fetch all employees")
     public List<Employee> findAll() {
-        return jpaRepository.findAll().stream()
+        return jpaRepository.findAllWithOrganization().stream()
                 .map(this::toDomainEntity)
                 .collect(Collectors.toList());
     }
@@ -39,7 +39,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     @Override
     @Auditable(action = "Fetch employee")
     public Optional<Employee> findById(Long id) {
-        return jpaRepository.findById(id)
+        return jpaRepository.findByIdWithOrganization(id)
                 .map(this::toDomainEntity);
     }
 
@@ -72,10 +72,11 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
 
     /**
      * Convert JPA entity to domain entity.
+     * Organization is already loaded via fetch join, no additional query needed.
      */
     private Employee toDomainEntity(EmployeeJpaEntity jpaEntity) {
-        Organization organization = organizationAdapter.findById(jpaEntity.getOrganization().getId())
-                .orElse(null);
+        OrganizationJpaEntity orgJpa = jpaEntity.getOrganization();
+        Organization organization = new Organization(orgJpa.getId(), orgJpa.getName());
 
         return new Employee(
                 jpaEntity.getId(),
