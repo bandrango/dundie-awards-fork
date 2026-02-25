@@ -7,12 +7,14 @@ import org.springframework.stereotype.Component;
 /**
  * Organization Mapper
  * Converts between OrganizationDTO and Organization domain entity.
+ * Implements Mapper pattern to keep domain objects free of infrastructure concerns.
  */
 @Component
 public class OrganizationMapper {
 
     /**
      * Convert domain entity to DTO.
+     * Handles null input safely.
      */
     public OrganizationDTO toDTO(Organization organization) {
         if (organization == null) {
@@ -26,6 +28,7 @@ public class OrganizationMapper {
 
     /**
      * Convert DTO to domain entity.
+     * Handles null input safely.
      */
     public Organization toDomain(OrganizationDTO dto) {
         if (dto == null) {

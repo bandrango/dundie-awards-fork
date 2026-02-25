@@ -1,14 +1,14 @@
 package com.ninjaone.dundie_awards.application.service;
 
 import com.ninjaone.dundie_awards.application.dto.ActivityDTO;
+import com.ninjaone.dundie_awards.application.dto.ActivityPageDTO;
 import com.ninjaone.dundie_awards.application.mapper.ActivityMapper;
 import com.ninjaone.dundie_awards.domain.entity.Activity;
+import com.ninjaone.dundie_awards.domain.model.PagedResult;
 import com.ninjaone.dundie_awards.domain.port.ActivityRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,22 +24,53 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ActivityApplicationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ActivityApplicationService.class);
-
     private final ActivityRepositoryPort activityRepository;
     private final ActivityMapper activityMapper;
 
     /**
-     * Use Case: Get all activities
+     * Get all activities
      */
     @Transactional(readOnly = true)
     public List<ActivityDTO> getAllActivities() {
-        logger.info("Use Case: Retrieving all activities");
         List<Activity> activities = activityRepository.findAll();
-        logger.debug("Retrieved {} activities", activities.size());
         return activities.stream()
                 .map(activityMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get paginated and sorted activities
+     * @param pageNumber Zero-based page number (defaults to 0)
+     * @param pageSize Number of items per page (defaults to 20)
+     * @return ActivityPageDTO with paginated results sorted by occurred date descending
+     */
+    @Transactional(readOnly = true)
+    public ActivityPageDTO getActivitiesPaginated(int pageNumber, int pageSize) {
+        if (pageSize <= 0) {
+            pageSize = 20;
+        }
+        if (pageSize > 100) {
+            pageSize = 100;
+        }
+        if (pageNumber < 0) {
+            pageNumber = 0;
+        }
+
+        PagedResult<Activity> pagedResult = activityRepository.findAllPagedAndSorted(pageNumber, pageSize);
+
+        List<ActivityDTO> dtoList = pagedResult.getContent().stream()
+                .map(activityMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return new ActivityPageDTO(
+                dtoList,
+                pagedResult.getPageNumber(),
+                pagedResult.getPageSize(),
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                pagedResult.hasNext(),
+                pagedResult.hasPrevious()
+        );
     }
 
     /**

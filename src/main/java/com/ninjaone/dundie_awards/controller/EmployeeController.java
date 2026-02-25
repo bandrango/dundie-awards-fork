@@ -2,8 +2,6 @@ package com.ninjaone.dundie_awards.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +32,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
-
     private final EmployeeApplicationService employeeService;
 
     /**
@@ -44,7 +40,6 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<EmployeeDTO> employees = employeeService.getAllEmployees();
-        logger.debug("Response: Retrieved {} employees", employees.size());
         return ResponseEntity.ok(employees);
     }
 
@@ -54,7 +49,6 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody CreateEmployeeRequest request) {
         EmployeeDTO createdEmployee = employeeService.createEmployee(request);
-        logger.info("Response: Employee created successfully with ID: {}", createdEmployee.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
@@ -64,7 +58,6 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
         EmployeeDTO employee = employeeService.getEmployeeById(id);
-        logger.debug("Response: Employee found with ID: {}", id);
         return ResponseEntity.ok(employee);
     }
 
@@ -76,7 +69,6 @@ public class EmployeeController {
             @PathVariable Long id,
             @RequestBody UpdateEmployeeRequest request) {
         EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, request);
-        logger.info("Response: Employee updated successfully with ID: {}", id);
         return ResponseEntity.ok(updatedEmployee);
     }
 
@@ -86,7 +78,6 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
-        logger.info("Response: Employee deleted successfully with ID: {}", id);
         return ResponseEntity.noContent().build();
     }
 }

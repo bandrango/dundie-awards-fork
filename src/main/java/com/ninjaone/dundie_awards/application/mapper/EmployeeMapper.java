@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * Employee Mapper
  * Converts between EmployeeDTO and Employee domain entity.
+ * Implements Mapper pattern to keep domain objects free of infrastructure concerns.
  */
 @Component
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class EmployeeMapper {
 
     /**
      * Convert domain entity to DTO.
+     * Handles null input safely.
      */
     public EmployeeDTO toDTO(Employee employee) {
         if (employee == null) {
@@ -36,6 +38,7 @@ public class EmployeeMapper {
 
     /**
      * Convert DTO to domain entity.
+     * Handles null input safely.
      */
     public Employee toDomain(EmployeeDTO dto) {
         if (dto == null) {

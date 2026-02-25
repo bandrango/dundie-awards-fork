@@ -13,9 +13,10 @@ import com.ninjaone.dundie_awards.domain.port.OrganizationRepositoryPort;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Data Loader Initializes sample data on application startup if the database is
- * empty. Works with domain ports to maintain independence from implementation
- * details.
+ * Data Loader
+ * Initializes sample data on application startup if the database is empty.
+ * Works with domain ports to maintain independence from implementation details.
+ * Implements CommandLineRunner for lazy initialization.
  */
 @Component
 @RequiredArgsConstructor
@@ -27,34 +28,37 @@ public class DataLoader implements CommandLineRunner {
 	private final OrganizationRepositoryPort organizationRepository;
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
+		if (isDatabaseEmpty()) {
+			initializeData();
+		}
+	}
 
-		long employeeCount = employeeRepository.count();
-		long organizationCount = organizationRepository.count();
+	/**
+	 * Check if database is empty.
+	 */
+	private boolean isDatabaseEmpty() {
+		return employeeRepository.count() == 0;
+	}
 
-		if (employeeCount == 0) {
-			try {
-				Organization organizationPikashu = new Organization("Pikashu");
-				Organization savedPikashu = organizationRepository.save(organizationPikashu);
+	/**
+	 * Initialize sample data.
+	 */
+	private void initializeData() {
+		try {
+			Organization pikashu = organizationRepository.save(new Organization("Pikashu"));
+			employeeRepository.save(new Employee("John", "Doe", pikashu));
+			employeeRepository.save(new Employee("Jane", "Smith", pikashu));
+			employeeRepository.save(new Employee("Creed", "Braton", pikashu));
 
-				employeeRepository.save(new Employee("John", "Doe", savedPikashu));
-				employeeRepository.save(new Employee("Jane", "Smith", savedPikashu));
-				employeeRepository.save(new Employee("Creed", "Braton", savedPikashu));
-
-				Organization organizationSquanchy = new Organization("Squanchy");
-				Organization savedSquanchy = organizationRepository.save(organizationSquanchy);
-
-				employeeRepository.save(new Employee("Michael", "Scott", savedSquanchy));
-				employeeRepository.save(new Employee("Dwight", "Schrute", savedSquanchy));
-				employeeRepository.save(new Employee("Jim", "Halpert", savedSquanchy));
-				employeeRepository.save(new Employee("Pam", "Beesley", savedSquanchy));
-			} catch (Exception e) {
-				logger.error("Error during initial data load: {}", e.getMessage(), e);
-				throw e;
-			}
-		} else {
-			logger.info("Database already contains data, skipping initial load (Employees={}, Organizations={})",
-					employeeCount, organizationCount);
+			Organization squanchy = organizationRepository.save(new Organization("Squanchy"));
+			employeeRepository.save(new Employee("Michael", "Scott", squanchy));
+			employeeRepository.save(new Employee("Dwight", "Schrute", squanchy));
+			employeeRepository.save(new Employee("Jim", "Halpert", squanchy));
+			employeeRepository.save(new Employee("Pam", "Beesley", squanchy));
+		} catch (Exception e) {
+			logger.error("Error during initial data load: {}", e.getMessage(), e);
+			throw new IllegalStateException("Failed to initialize database with sample data", e);
 		}
 	}
 }

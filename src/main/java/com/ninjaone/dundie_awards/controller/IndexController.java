@@ -1,15 +1,14 @@
 package com.ninjaone.dundie_awards.controller;
 
-import com.ninjaone.dundie_awards.application.dto.ActivityDTO;
+import com.ninjaone.dundie_awards.application.dto.ActivityPageDTO;
 import com.ninjaone.dundie_awards.application.dto.EmployeeDTO;
 import com.ninjaone.dundie_awards.application.service.ActivityApplicationService;
 import com.ninjaone.dundie_awards.application.service.EmployeeApplicationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,35 +24,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IndexController {
 
-    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
-
     private final EmployeeApplicationService employeeService;
     private final ActivityApplicationService activityService;
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
-    /**
-     * GET /
-     * Render home page with employees and activities
-     */
     @GetMapping
-    public String getIndex(Model model) {
-        logger.info("HTTP Request: GET / - Rendering home page");
-        try {
-            long employeeCount = employeeService.getEmployeeCount();
-            long activityCount = activityService.getActivityCount();
+    public String getIndex(
+            @RequestParam(defaultValue = "0") int page,
+            Model model) {
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        ActivityPageDTO activities = activityService.getActivitiesPaginated(page, DEFAULT_PAGE_SIZE);
 
-            logger.debug("Loading model with data: Employees={}, Activities={}", employeeCount, activityCount);
+        model.addAttribute("employees", employees);
+        model.addAttribute("activities", activities);
 
-            List<EmployeeDTO> employees = employeeService.getAllEmployees();
-            List<ActivityDTO> activities = activityService.getAllActivities();
-
-            model.addAttribute("employees", employees);
-            model.addAttribute("activities", activities);
-
-            logger.info("Response: Home page loaded successfully");
-            return "index";
-        } catch (Exception e) {
-            logger.error("Error loading home page: {}", e.getMessage(), e);
-            throw e;
-        }
+        return "index";
     }
 }

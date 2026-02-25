@@ -1,5 +1,7 @@
 package com.ninjaone.dundie_awards.application.aspect;
 
+import java.time.LocalDateTime;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -8,14 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.ninjaone.dundie_awards.application.annotation.Auditable;
-import com.ninjaone.dundie_awards.application.service.ActivityApplicationService;
 import com.ninjaone.dundie_awards.domain.entity.Activity;
 import com.ninjaone.dundie_awards.domain.port.ActivityRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
-
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 
 /**
  * Audit Aspect
@@ -48,19 +46,13 @@ public class AuditAspect {
         
         try {
             String action = auditable.action();
-            String eventDescription = String.format("%s | Method: %s.%s()", action, className, methodName);
+            String eventDescription = String.format("%s | %s.%s()", action, className, methodName);
             
-            logger.info("AUDIT INTERCEPTED - Action: {} | Class: {} | Method: {}", action, className, methodName);
-
             Activity activity = new Activity(LocalDateTime.now(), eventDescription);
+            activityRepository.save(activity);
             
-            Activity saved = activityRepository.save(activity);
-            logger.info("AUDIT LOGGED - Activity ID: {} | Action: {} | Event: {}", 
-                saved.getId(), action, eventDescription);
-
         } catch (Exception ex) {
-            logger.error("AUDIT ERROR - Method: {}.{} | Error: {} | Message: {}", 
-                className, methodName, ex.getClass().getSimpleName(), ex.getMessage());
+            logger.error("Failed to log audit: {} | Error: {}", auditable.action(), ex.getMessage());
         }
     }
 }

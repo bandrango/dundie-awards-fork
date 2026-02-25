@@ -41,9 +41,7 @@ public class EmployeeApplicationService {
      * Retrieves a list of all employees in the system
      */
     public List<EmployeeDTO> getAllEmployees() {
-        logger.info("Use Case: Retrieving all employees");
         List<Employee> employees = employeeRepository.findAll();
-        logger.debug("Retrieved {} employees", employees.size());
         return employees.stream()
                 .map(employeeMapper::toDTO)
                 .toList();
@@ -58,15 +56,11 @@ public class EmployeeApplicationService {
      * @throws EmployeeNotFoundException if employee not found
      */
     public EmployeeDTO getEmployeeById(Long id) {
-        logger.info("Use Case: Retrieving employee with ID: {}", id);
-
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isEmpty()) {
             logger.warn("Employee not found with ID: {}", id);
             throw new EmployeeNotFoundException(id);
         }
-
-        logger.debug("Employee found with ID: {}", id);
         return employeeMapper.toDTO(employee.get());
     }
 
@@ -74,16 +68,14 @@ public class EmployeeApplicationService {
      * Use Case: Create Employee
      * Creates a new employee and assigns it to an organization
      * 
-     * @param request CreateEmployeeRequest with all employee fields
+     * @param request CreateEmployeeRequest with employee fields
      * @return EmployeeDTO of the created employee
      * @throws IllegalArgumentException if firstName or lastName are invalid
      */
     public EmployeeDTO createEmployee(CreateEmployeeRequest request) {
-        logger.info("Use Case: Creating new employee: {} {}", request.getFirstName(), request.getLastName());
-
         Organization organization = organizationMapper.toDomain(request.getOrganization());
         Employee employee = new Employee(
-                request.getId(),
+                null,
                 request.getFirstName(),
                 request.getLastName(),
                 request.getDundieAwards(),
@@ -91,8 +83,6 @@ public class EmployeeApplicationService {
         );
 
         Employee savedEmployee = employeeRepository.save(employee);
-        logger.info("Employee created successfully with ID: {}", savedEmployee.getId());
-
         return employeeMapper.toDTO(savedEmployee);
     }
 
@@ -106,8 +96,6 @@ public class EmployeeApplicationService {
      * @throws EmployeeNotFoundException if employee not found
      */
     public EmployeeDTO updateEmployee(Long id, UpdateEmployeeRequest request) {
-        logger.info("Use Case: Updating employee with ID: {}", id);
-
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if (existingEmployee.isEmpty()) {
             logger.warn("Employee not found with ID: {}", id);
@@ -123,8 +111,6 @@ public class EmployeeApplicationService {
         );
 
         Employee saved = employeeRepository.update(updatedEmployee);
-        logger.info("Employee updated successfully with ID: {}", id);
-
         return employeeMapper.toDTO(saved);
     }
 
@@ -136,8 +122,6 @@ public class EmployeeApplicationService {
      * @throws EmployeeNotFoundException if employee not found
      */
     public void deleteEmployee(Long id) {
-        logger.info("Use Case: Deleting employee with ID: {}", id);
-
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isEmpty()) {
             logger.warn("Employee not found with ID: {}", id);
@@ -145,7 +129,6 @@ public class EmployeeApplicationService {
         }
 
         employeeRepository.deleteById(id);
-        logger.info("Employee deleted successfully with ID: {}", id);
     }
 
     /**

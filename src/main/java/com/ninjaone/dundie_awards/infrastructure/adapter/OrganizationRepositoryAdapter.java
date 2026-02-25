@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.ninjaone.dundie_awards.domain.entity.Organization;
@@ -24,13 +22,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrganizationRepositoryAdapter implements OrganizationRepositoryPort {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrganizationRepositoryAdapter.class);
-
     private final OrganizationJpaRepository jpaRepository;
 
     @Override
     public List<Organization> findAll() {
-        logger.debug("Repository: Finding all organizations");
         return jpaRepository.findAll().stream()
                 .map(this::toDomainEntity)
                 .collect(Collectors.toList());
@@ -44,7 +39,6 @@ public class OrganizationRepositoryAdapter implements OrganizationRepositoryPort
 
     @Override
     public Organization save(Organization organization) {
-        logger.debug("Repository: Saving organization: {}", organization.getName());
         OrganizationJpaEntity jpaEntity = toJpaEntity(organization);
         OrganizationJpaEntity saved = jpaRepository.save(jpaEntity);
         return toDomainEntity(saved);
