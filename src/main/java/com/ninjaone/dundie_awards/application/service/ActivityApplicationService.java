@@ -9,6 +9,7 @@ import com.ninjaone.dundie_awards.domain.port.ActivityRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Activity Application Service
  * Manages activity-related operations.
+ * Pagination configuration is externalized via @Value annotations.
  */
 @Service
 @Transactional
@@ -26,6 +28,12 @@ public class ActivityApplicationService {
 
     private final ActivityRepositoryPort activityRepository;
     private final ActivityMapper activityMapper;
+    
+    @Value("${app.pagination.activity-default-size:20}")
+    private int activityDefaultSize;
+    
+    @Value("${app.pagination.activity-max-size:100}")
+    private int activityMaxSize;
 
     /**
      * Get all activities
@@ -41,16 +49,16 @@ public class ActivityApplicationService {
     /**
      * Get paginated and sorted activities
      * @param pageNumber Zero-based page number (defaults to 0)
-     * @param pageSize Number of items per page (defaults to 20)
+     * @param pageSize Number of items per page (defaults to configured value)
      * @return ActivityPageDTO with paginated results sorted by occurred date descending
      */
     @Transactional(readOnly = true)
     public ActivityPageDTO getActivitiesPaginated(int pageNumber, int pageSize) {
         if (pageSize <= 0) {
-            pageSize = 20;
+            pageSize = activityDefaultSize;
         }
-        if (pageSize > 100) {
-            pageSize = 100;
+        if (pageSize > activityMaxSize) {
+            pageSize = activityMaxSize;
         }
         if (pageNumber < 0) {
             pageNumber = 0;

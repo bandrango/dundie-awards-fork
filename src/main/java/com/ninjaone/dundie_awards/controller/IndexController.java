@@ -4,6 +4,7 @@ import com.ninjaone.dundie_awards.application.dto.ActivityPageDTO;
 import com.ninjaone.dundie_awards.application.dto.EmployeeDTO;
 import com.ninjaone.dundie_awards.application.service.ActivityApplicationService;
 import com.ninjaone.dundie_awards.application.service.EmployeeApplicationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,14 +27,16 @@ public class IndexController {
 
     private final EmployeeApplicationService employeeService;
     private final ActivityApplicationService activityService;
-    private static final int DEFAULT_PAGE_SIZE = 10;
+    
+    @Value("${app.pagination.default-page-size:10}")
+    private int defaultPageSize;
 
     @GetMapping
     public String getIndex(
             @RequestParam(defaultValue = "0") int page,
             Model model) {
         List<EmployeeDTO> employees = employeeService.getAllEmployees();
-        ActivityPageDTO activities = activityService.getActivitiesPaginated(page, DEFAULT_PAGE_SIZE);
+        ActivityPageDTO activities = activityService.getActivitiesPaginated(page, defaultPageSize);
 
         model.addAttribute("employees", employees);
         model.addAttribute("activities", activities);
