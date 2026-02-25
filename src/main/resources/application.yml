@@ -48,3 +48,5 @@ logging:
     com.ninjaone: DEBUG
     org.springframework: INFO
     org.hibernate: WARN
+  pattern:
+    console: "%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"

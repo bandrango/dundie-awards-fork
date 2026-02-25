@@ -13,6 +13,8 @@ import com.ninjaone.dundie_awards.infrastructure.persistence.ActivityJpaEntity;
 import com.ninjaone.dundie_awards.infrastructure.repository.ActivityJpaRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  * Activity Repository Adapter
@@ -36,10 +38,12 @@ public class ActivityRepositoryAdapter implements ActivityRepositoryPort {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Activity save(Activity activity) {
         logger.debug("Repository: Saving activity: {}", activity.getEvent());
         ActivityJpaEntity jpaEntity = toJpaEntity(activity);
         ActivityJpaEntity saved = jpaRepository.save(jpaEntity);
+        logger.info("Activity persisted successfully: {}", activity.getEvent());
         return toDomainEntity(saved);
     }
 

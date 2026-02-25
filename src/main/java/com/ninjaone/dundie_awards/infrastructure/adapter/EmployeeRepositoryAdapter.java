@@ -16,6 +16,7 @@ import com.ninjaone.dundie_awards.infrastructure.persistence.OrganizationJpaEnti
 import com.ninjaone.dundie_awards.infrastructure.repository.EmployeeJpaRepository;
 
 import lombok.RequiredArgsConstructor;
+import com.ninjaone.dundie_awards.application.annotation.Auditable;
 
 /**
  * Employee Repository Adapter
@@ -32,6 +33,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     private final OrganizationRepositoryAdapter organizationAdapter;
 
     @Override
+    @Auditable(action = "Fetch all employees")
     public List<Employee> findAll() {
         logger.debug("Repository: Finding all employees");
         return jpaRepository.findAll().stream()
@@ -40,6 +42,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     }
 
     @Override
+    @Auditable(action = "Fetch employee")
     public Optional<Employee> findById(Long id) {
         logger.debug("Repository: Finding employee by ID: {}", id);
         return jpaRepository.findById(id)
@@ -47,6 +50,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     }
 
     @Override
+    @Auditable(action = "Employee created")
     public Employee save(Employee employee) {
         logger.debug("Repository: Saving employee: {} {}", employee.getFirstName(), employee.getLastName());
         EmployeeJpaEntity jpaEntity = toJpaEntity(employee);
@@ -55,6 +59,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     }
 
     @Override
+    @Auditable(action = "Employee updated")
     public Employee update(Employee employee) {
         logger.debug("Repository: Updating employee with ID: {}", employee.getId());
         EmployeeJpaEntity jpaEntity = toJpaEntity(employee);
@@ -63,6 +68,7 @@ public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
     }
 
     @Override
+    @Auditable(action = "Employee deleted")
     public void deleteById(Long id) {
         logger.debug("Repository: Deleting employee with ID: {}", id);
         jpaRepository.deleteById(id);

@@ -81,11 +81,7 @@ public class EmployeeApplicationService {
     public EmployeeDTO createEmployee(CreateEmployeeRequest request) {
         logger.info("Use Case: Creating new employee: {} {}", request.getFirstName(), request.getLastName());
 
-        // Convert organization DTO to domain entity
         Organization organization = organizationMapper.toDomain(request.getOrganization());
-        logger.debug("Organization converted from DTO for employee: {}", request.getFirstName());
-
-        // Create domain entity with business validation
         Employee employee = new Employee(
                 request.getId(),
                 request.getFirstName(),
@@ -93,9 +89,7 @@ public class EmployeeApplicationService {
                 request.getDundieAwards(),
                 organization
         );
-        logger.debug("Domain entity created for employee: {} {}", request.getFirstName(), request.getLastName());
 
-        // Persist through port
         Employee savedEmployee = employeeRepository.save(employee);
         logger.info("Employee created successfully with ID: {}", savedEmployee.getId());
 
@@ -114,14 +108,12 @@ public class EmployeeApplicationService {
     public EmployeeDTO updateEmployee(Long id, UpdateEmployeeRequest request) {
         logger.info("Use Case: Updating employee with ID: {}", id);
 
-        // Fetch existing employee
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if (existingEmployee.isEmpty()) {
             logger.warn("Employee not found with ID: {}", id);
             throw new EmployeeNotFoundException(id);
         }
 
-        // Create updated domain entity
         Employee updatedEmployee = new Employee(
                 id,
                 request.getFirstName(),
@@ -129,9 +121,7 @@ public class EmployeeApplicationService {
                 existingEmployee.get().getDundieAwards(),
                 existingEmployee.get().getOrganization()
         );
-        logger.debug("Updated domain entity for employee ID: {}", id);
 
-        // Persist through port
         Employee saved = employeeRepository.update(updatedEmployee);
         logger.info("Employee updated successfully with ID: {}", id);
 
@@ -148,7 +138,6 @@ public class EmployeeApplicationService {
     public void deleteEmployee(Long id) {
         logger.info("Use Case: Deleting employee with ID: {}", id);
 
-        // Verify employee exists before deletion
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isEmpty()) {
             logger.warn("Employee not found with ID: {}", id);
@@ -164,9 +153,6 @@ public class EmployeeApplicationService {
      * Returns the total number of employees in the system
      */
     public long getEmployeeCount() {
-        logger.info("Use Case: Retrieving employee count");
-        long count = employeeRepository.count();
-        logger.debug("Total employee count: {}", count);
-        return count;
+        return employeeRepository.count();
     }
 }
