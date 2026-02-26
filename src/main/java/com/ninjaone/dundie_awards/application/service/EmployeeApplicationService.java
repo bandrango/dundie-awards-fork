@@ -35,6 +35,8 @@ public class EmployeeApplicationService {
     private final EmployeeRepositoryPort employeeRepository;
     private final EmployeeMapper employeeMapper;
     private final OrganizationMapper organizationMapper;
+    
+    private static final String MSG_EMPLOYEE_NOT_FOUND = "Employee not found with ID: {}";
 
     /**
      * Use Case: Get All Employees
@@ -60,7 +62,7 @@ public class EmployeeApplicationService {
     public EmployeeDTO getEmployeeById(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isEmpty()) {
-            logger.warn("Employee not found with ID: {}", id);
+            logger.warn(MSG_EMPLOYEE_NOT_FOUND, id);
             throw new EmployeeNotFoundException(id);
         }
         return employeeMapper.toDTO(employee.get());
@@ -100,7 +102,7 @@ public class EmployeeApplicationService {
     public EmployeeDTO updateEmployee(Long id, UpdateEmployeeRequest request) {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if (existingEmployee.isEmpty()) {
-            logger.warn("Employee not found with ID: {}", id);
+            logger.warn(MSG_EMPLOYEE_NOT_FOUND, id);
             throw new EmployeeNotFoundException(id);
         }
 
@@ -126,7 +128,7 @@ public class EmployeeApplicationService {
     public void deleteEmployee(Long id) {
         Optional<Employee> employee = employeeRepository.findById(id);
         if (employee.isEmpty()) {
-            logger.warn("Employee not found with ID: {}", id);
+            logger.warn(MSG_EMPLOYEE_NOT_FOUND, id);
             throw new EmployeeNotFoundException(id);
         }
 

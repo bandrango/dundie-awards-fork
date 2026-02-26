@@ -2,7 +2,6 @@ package com.ninjaone.dundie_awards.infrastructure.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class OrganizationRepositoryAdapter implements OrganizationRepositoryPort
     public List<Organization> findAll() {
         return jpaRepository.findAll().stream()
                 .map(this::toDomainEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

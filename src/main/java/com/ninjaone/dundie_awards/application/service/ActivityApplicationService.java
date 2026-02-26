@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Activity Application Service
@@ -43,7 +42,7 @@ public class ActivityApplicationService {
         List<Activity> activities = activityRepository.findAll();
         return activities.stream()
                 .map(activityMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -68,7 +67,7 @@ public class ActivityApplicationService {
 
         List<ActivityDTO> dtoList = pagedResult.getContent().stream()
                 .map(activityMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         return new ActivityPageDTO(
                 dtoList,

@@ -2,7 +2,6 @@ package com.ninjaone.dundie_awards.infrastructure.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -26,14 +25,13 @@ import lombok.RequiredArgsConstructor;
 public class EmployeeRepositoryAdapter implements EmployeeRepositoryPort {
 
     private final EmployeeJpaRepository jpaRepository;
-    private final OrganizationRepositoryAdapter organizationAdapter;
 
     @Override
     @Auditable(action = "Fetch all employees")
     public List<Employee> findAll() {
         return jpaRepository.findAllWithOrganization().stream()
                 .map(this::toDomainEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

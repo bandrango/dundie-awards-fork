@@ -1,7 +1,6 @@
 package com.ninjaone.dundie_awards.infrastructure.adapter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +32,7 @@ public class ActivityRepositoryAdapter implements ActivityRepositoryPort {
     public List<Activity> findAll() {
         return jpaRepository.findAll().stream()
                 .map(this::toDomainEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -45,7 +44,7 @@ public class ActivityRepositoryAdapter implements ActivityRepositoryPort {
 
         List<Activity> activities = page.getContent().stream()
                 .map(this::toDomainEntity)
-                .collect(Collectors.toList());
+                .toList();
 
         return new PagedResult<>(
                 activities,
