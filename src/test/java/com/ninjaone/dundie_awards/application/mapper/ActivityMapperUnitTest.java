@@ -19,10 +19,11 @@ class ActivityMapperUnitTest {
         
         ActivityDTO dto = mapper.toDTO(activity);
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isEqualTo(1L);
-        assertThat(dto.getOccurredAt()).isEqualTo(NOW);
-        assertThat(dto.getEvent()).isEqualTo("Employee created | Employee.create()");
+        assertThat(dto)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", 1L)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Employee created | Employee.create()");
     }
 
     @Test
@@ -37,10 +38,11 @@ class ActivityMapperUnitTest {
         
         ActivityDTO dto = mapper.toDTO(activity);
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isNull();
-        assertThat(dto.getOccurredAt()).isEqualTo(NOW);
-        assertThat(dto.getEvent()).isEqualTo("Simple event");
+        assertThat(dto)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Simple event");
     }
 
     @Test
@@ -49,10 +51,11 @@ class ActivityMapperUnitTest {
         
         Activity activity = mapper.toDomain(dto);
 
-        assertThat(activity).isNotNull();
-        assertThat(activity.getId()).isEqualTo(2L);
-        assertThat(activity.getOccurredAt()).isEqualTo(NOW);
-        assertThat(activity.getEvent()).isEqualTo("Employee updated | Employee.update()");
+        assertThat(activity)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", 2L)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Employee updated | Employee.update()");
     }
 
     @Test
@@ -67,10 +70,11 @@ class ActivityMapperUnitTest {
         
         Activity activity = mapper.toDomain(dto);
 
-        assertThat(activity).isNotNull();
-        assertThat(activity.getId()).isNull();
-        assertThat(activity.getOccurredAt()).isEqualTo(NOW);
-        assertThat(activity.getEvent()).isEqualTo("Event without ID");
+        assertThat(activity)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Event without ID");
     }
 
     @Test
@@ -80,8 +84,9 @@ class ActivityMapperUnitTest {
         Activity domain = mapper.toDomain(original);
         ActivityDTO roundTrip = mapper.toDTO(domain);
 
-        assertThat(roundTrip.getId()).isEqualTo(original.getId());
-        assertThat(roundTrip.getOccurredAt()).isEqualTo(original.getOccurredAt());
-        assertThat(roundTrip.getEvent()).isEqualTo(original.getEvent());
+        assertThat(roundTrip)
+            .hasFieldOrPropertyWithValue("id", original.getId())
+            .hasFieldOrPropertyWithValue("occurredAt", original.getOccurredAt())
+            .hasFieldOrPropertyWithValue("event", original.getEvent());
     }
 }

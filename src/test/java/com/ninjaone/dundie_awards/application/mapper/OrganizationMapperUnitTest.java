@@ -16,9 +16,10 @@ class OrganizationMapperUnitTest {
         
         OrganizationDTO dto = mapper.toDTO(org);
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isEqualTo(1L);
-        assertThat(dto.getName()).isEqualTo("TechCorp");
+        assertThat(dto)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", 1L)
+            .hasFieldOrPropertyWithValue("name", "TechCorp");
     }
 
     @Test
@@ -33,9 +34,10 @@ class OrganizationMapperUnitTest {
         
         OrganizationDTO dto = mapper.toDTO(org);
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isNull();
-        assertThat(dto.getName()).isEqualTo("StartupCorp");
+        assertThat(dto)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("name", "StartupCorp");
     }
 
     @Test
@@ -44,9 +46,10 @@ class OrganizationMapperUnitTest {
         
         Organization org = mapper.toDomain(dto);
 
-        assertThat(org).isNotNull();
-        assertThat(org.getId()).isEqualTo(2L);
-        assertThat(org.getName()).isEqualTo("NewOrg");
+        assertThat(org)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", 2L)
+            .hasFieldOrPropertyWithValue("name", "NewOrg");
     }
 
     @Test
@@ -61,9 +64,10 @@ class OrganizationMapperUnitTest {
         
         Organization org = mapper.toDomain(dto);
 
-        assertThat(org).isNotNull();
-        assertThat(org.getId()).isNull();
-        assertThat(org.getName()).isEqualTo("NewStartup");
+        assertThat(org)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("name", "NewStartup");
     }
 
     @Test

@@ -60,7 +60,7 @@ class DundieAwardsApplicationTests {
 	void testGetActivitiesPaginatedPage0() {
 		var page = activityService.getActivitiesPaginated(0, 10);
 		assertThat(page).isNotNull();
-		assertThat(page.getPageNumber()).isEqualTo(0);
+		assertThat(page.getPageNumber()).isZero();
 	}
 
 	@Test
@@ -74,7 +74,7 @@ class DundieAwardsApplicationTests {
 	void testActivityPageHasCorrectStructure() {
 		var page = activityService.getActivitiesPaginated(0, 10);
 		assertThat(page.getContent()).isNotNull();
-		assertThat(page.getPageNumber()).isEqualTo(0);
+		assertThat(page.getPageNumber()).isZero();
 		assertThat(page.getPageSize()).isEqualTo(10);
 	}
 }

@@ -9,10 +9,11 @@ class CreateEmployeeRequestUnitTest {
     @Test
     void noArgsConstructor_ShouldCreateEmptyRequest() {
         CreateEmployeeRequest req = new CreateEmployeeRequest();
-        assertThat(req.getFirstName()).isNull();
-        assertThat(req.getLastName()).isNull();
-        assertThat(req.getOrganization()).isNull();
-        assertThat(req.getDundieAwards()).isNull();
+        assertThat(req)
+            .hasFieldOrPropertyWithValue("firstName", null)
+            .hasFieldOrPropertyWithValue("lastName", null)
+            .hasFieldOrPropertyWithValue("organization", null)
+            .hasFieldOrPropertyWithValue("dundieAwards", null);
     }
 
     @Test
@@ -20,10 +21,11 @@ class CreateEmployeeRequestUnitTest {
         OrganizationDTO org = new OrganizationDTO(1L, "TechCorp");
         CreateEmployeeRequest req = new CreateEmployeeRequest("John", "Doe", org, 5);
 
-        assertThat(req.getFirstName()).isEqualTo("John");
-        assertThat(req.getLastName()).isEqualTo("Doe");
-        assertThat(req.getOrganization()).isEqualTo(org);
-        assertThat(req.getDundieAwards()).isEqualTo(5);
+        assertThat(req)
+            .hasFieldOrPropertyWithValue("firstName", "John")
+            .hasFieldOrPropertyWithValue("lastName", "Doe")
+            .hasFieldOrPropertyWithValue("organization", org)
+            .hasFieldOrPropertyWithValue("dundieAwards", 5);
     }
 
     @Test
@@ -36,10 +38,11 @@ class CreateEmployeeRequestUnitTest {
         req.setOrganization(org);
         req.setDundieAwards(10);
 
-        assertThat(req.getFirstName()).isEqualTo("Jane");
-        assertThat(req.getLastName()).isEqualTo("Smith");
-        assertThat(req.getOrganization()).isEqualTo(org);
-        assertThat(req.getDundieAwards()).isEqualTo(10);
+        assertThat(req)
+            .hasFieldOrPropertyWithValue("firstName", "Jane")
+            .hasFieldOrPropertyWithValue("lastName", "Smith")
+            .hasFieldOrPropertyWithValue("organization", org)
+            .hasFieldOrPropertyWithValue("dundieAwards", 10);
     }
 
     @Test

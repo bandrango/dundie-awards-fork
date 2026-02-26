@@ -9,15 +9,17 @@ class OrganizationUnitTest {
     @Test
     void constructorWithIdAndName_ShouldCreateOrganization() {
         Organization org = new Organization(1L, "TechCorp");
-        assertThat(org.getId()).isEqualTo(1L);
-        assertThat(org.getName()).isEqualTo("TechCorp");
+        assertThat(org)
+            .hasFieldOrPropertyWithValue("id", 1L)
+            .hasFieldOrPropertyWithValue("name", "TechCorp");
     }
 
     @Test
     void constructorWithNameOnly_ShouldCreateOrganization() {
         Organization org = new Organization("TechCorp");
-        assertThat(org.getId()).isNull();
-        assertThat(org.getName()).isEqualTo("TechCorp");
+        assertThat(org)
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("name", "TechCorp");
     }
 
     @Test

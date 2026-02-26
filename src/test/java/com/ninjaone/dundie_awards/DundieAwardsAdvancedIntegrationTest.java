@@ -52,9 +52,10 @@ class DundieAwardsAdvancedIntegrationTest {
     @Test
     void getActivities_ShouldReturnPaginatedResults() {
         var activities = activityService.getActivitiesPaginated(0, 10);
-        assertThat(activities).isNotNull();
-        assertThat(activities.getPageNumber()).isEqualTo(0);
-        assertThat(activities.getPageSize()).isEqualTo(10);
+        assertThat(activities)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("pageNumber", 0)
+            .hasFieldOrPropertyWithValue("pageSize", 10);
     }
 
     @Test

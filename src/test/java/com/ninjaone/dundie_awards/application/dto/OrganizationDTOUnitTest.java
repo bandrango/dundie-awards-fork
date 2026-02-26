@@ -9,15 +9,17 @@ class OrganizationDTOUnitTest {
     @Test
     void noArgsConstructor_ShouldCreateEmptyDTO() {
         OrganizationDTO dto = new OrganizationDTO();
-        assertThat(dto.getId()).isNull();
-        assertThat(dto.getName()).isNull();
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("name", null);
     }
 
     @Test
     void allArgsConstructor_ShouldPopulateAllFields() {
         OrganizationDTO dto = new OrganizationDTO(1L, "TechCorp");
-        assertThat(dto.getId()).isEqualTo(1L);
-        assertThat(dto.getName()).isEqualTo("TechCorp");
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", 1L)
+            .hasFieldOrPropertyWithValue("name", "TechCorp");
     }
 
     @Test
@@ -26,8 +28,9 @@ class OrganizationDTOUnitTest {
         dto.setId(5L);
         dto.setName("NewOrg");
 
-        assertThat(dto.getId()).isEqualTo(5L);
-        assertThat(dto.getName()).isEqualTo("NewOrg");
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", 5L)
+            .hasFieldOrPropertyWithValue("name", "NewOrg");
     }
 
     @Test

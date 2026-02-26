@@ -9,15 +9,17 @@ class UpdateEmployeeRequestUnitTest {
     @Test
     void noArgsConstructor_ShouldCreateEmptyRequest() {
         UpdateEmployeeRequest req = new UpdateEmployeeRequest();
-        assertThat(req.getFirstName()).isNull();
-        assertThat(req.getLastName()).isNull();
+        assertThat(req)
+            .hasFieldOrPropertyWithValue("firstName", null)
+            .hasFieldOrPropertyWithValue("lastName", null);
     }
 
     @Test
     void allArgsConstructor_ShouldPopulateAllFields() {
         UpdateEmployeeRequest req = new UpdateEmployeeRequest("Jane", "Smith");
-        assertThat(req.getFirstName()).isEqualTo("Jane");
-        assertThat(req.getLastName()).isEqualTo("Smith");
+        assertThat(req)
+            .hasFieldOrPropertyWithValue("firstName", "Jane")
+            .hasFieldOrPropertyWithValue("lastName", "Smith");
     }
 
     @Test
@@ -26,8 +28,9 @@ class UpdateEmployeeRequestUnitTest {
         req.setFirstName("John");
         req.setLastName("Doe");
 
-        assertThat(req.getFirstName()).isEqualTo("John");
-        assertThat(req.getLastName()).isEqualTo("Doe");
+        assertThat(req)
+            .hasFieldOrPropertyWithValue("firstName", "John")
+            .hasFieldOrPropertyWithValue("lastName", "Doe");
     }
 
     @Test

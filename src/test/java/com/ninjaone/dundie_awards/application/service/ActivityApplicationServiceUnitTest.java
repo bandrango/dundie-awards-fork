@@ -75,7 +75,7 @@ class ActivityApplicationServiceUnitTest {
         ActivityPageDTO result = activityService.getActivitiesPaginated(0, 20);
 
         assertThat(result).isNotNull();
-        assertThat(result.getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageNumber()).isZero();
         assertThat(result.getPageSize()).isEqualTo(20);
         assertThat(result.getTotalElements()).isEqualTo(50);
         assertThat(result.isHasNext()).isTrue();
@@ -134,7 +134,7 @@ class ActivityApplicationServiceUnitTest {
 
         ActivityPageDTO result = activityService.getActivitiesPaginated(-1, 20);
 
-        assertThat(result.getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageNumber()).isZero();
         verify(activityRepository).findAllPagedAndSorted(0, 20);
     }
 

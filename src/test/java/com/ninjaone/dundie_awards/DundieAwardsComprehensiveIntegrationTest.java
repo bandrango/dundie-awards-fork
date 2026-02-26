@@ -40,7 +40,7 @@ class DundieAwardsComprehensiveIntegrationTest {
     void paginationVariations_AllReturnValidResults() {
         // Page 0 with default size
         var page0 = activityService.getActivitiesPaginated(0, 10);
-        assertThat(page0.getPageNumber()).isEqualTo(0);
+        assertThat(page0.getPageNumber()).isZero();
         
         // Page 1
         var page1 = activityService.getActivitiesPaginated(1, 10);
@@ -54,7 +54,7 @@ class DundieAwardsComprehensiveIntegrationTest {
     @Test
     void edgeCasePagination_NegativePageNumber_DefaultsToZero() {
         var result = activityService.getActivitiesPaginated(-5, 10);
-        assertThat(result.getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageNumber()).isZero();
     }
 
     @Test

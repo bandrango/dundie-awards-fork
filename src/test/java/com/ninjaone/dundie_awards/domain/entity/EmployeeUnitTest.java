@@ -24,7 +24,7 @@ class EmployeeUnitTest {
         assertThat(emp.getId()).isNull();
         assertThat(emp.getFirstName()).isEqualTo("John");
         assertThat(emp.getLastName()).isEqualTo("Doe");
-        assertThat(emp.getDundieAwards()).isEqualTo(0);
+        assertThat(emp.getDundieAwards()).isZero();
         assertThat(emp.getOrganization()).isEqualTo(ORG);
     }
 
@@ -66,7 +66,7 @@ class EmployeeUnitTest {
     @Test
     void nullDundieAwards_ShouldDefaultToZero() {
         Employee emp = new Employee(1L, "John", "Doe", null, ORG);
-        assertThat(emp.getDundieAwards()).isEqualTo(0);
+        assertThat(emp.getDundieAwards()).isZero();
     }
 
     @Test

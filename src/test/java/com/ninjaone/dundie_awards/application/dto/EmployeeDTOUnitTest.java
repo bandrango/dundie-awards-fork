@@ -9,11 +9,12 @@ class EmployeeDTOUnitTest {
     @Test
     void noArgsConstructor_ShouldCreateEmptyDTO() {
         EmployeeDTO dto = new EmployeeDTO();
-        assertThat(dto.getId()).isNull();
-        assertThat(dto.getFirstName()).isNull();
-        assertThat(dto.getLastName()).isNull();
-        assertThat(dto.getDundieAwards()).isNull();
-        assertThat(dto.getOrganization()).isNull();
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("firstName", null)
+            .hasFieldOrPropertyWithValue("lastName", null)
+            .hasFieldOrPropertyWithValue("dundieAwards", null)
+            .hasFieldOrPropertyWithValue("organization", null);
     }
 
     @Test
@@ -21,11 +22,12 @@ class EmployeeDTOUnitTest {
         OrganizationDTO org = new OrganizationDTO(1L, "TechCorp");
         EmployeeDTO dto = new EmployeeDTO(10L, "John", "Doe", 5, org);
 
-        assertThat(dto.getId()).isEqualTo(10L);
-        assertThat(dto.getFirstName()).isEqualTo("John");
-        assertThat(dto.getLastName()).isEqualTo("Doe");
-        assertThat(dto.getDundieAwards()).isEqualTo(5);
-        assertThat(dto.getOrganization()).isEqualTo(org);
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", 10L)
+            .hasFieldOrPropertyWithValue("firstName", "John")
+            .hasFieldOrPropertyWithValue("lastName", "Doe")
+            .hasFieldOrPropertyWithValue("dundieAwards", 5)
+            .hasFieldOrPropertyWithValue("organization", org);
     }
 
     @Test
@@ -39,11 +41,12 @@ class EmployeeDTOUnitTest {
         dto.setDundieAwards(8);
         dto.setOrganization(org);
 
-        assertThat(dto.getId()).isEqualTo(20L);
-        assertThat(dto.getFirstName()).isEqualTo("Jane");
-        assertThat(dto.getLastName()).isEqualTo("Smith");
-        assertThat(dto.getDundieAwards()).isEqualTo(8);
-        assertThat(dto.getOrganization()).isEqualTo(org);
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", 20L)
+            .hasFieldOrPropertyWithValue("firstName", "Jane")
+            .hasFieldOrPropertyWithValue("lastName", "Smith")
+            .hasFieldOrPropertyWithValue("dundieAwards", 8)
+            .hasFieldOrPropertyWithValue("organization", org);
     }
 
     @Test

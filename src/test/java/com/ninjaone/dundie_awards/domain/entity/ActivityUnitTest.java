@@ -13,17 +13,19 @@ class ActivityUnitTest {
     @Test
     void constructorWithAllFields_ShouldCreateActivity() {
         Activity activity = new Activity(1L, NOW, "Employee created");
-        assertThat(activity.getId()).isEqualTo(1L);
-        assertThat(activity.getOccurredAt()).isEqualTo(NOW);
-        assertThat(activity.getEvent()).isEqualTo("Employee created");
+        assertThat(activity)
+            .hasFieldOrPropertyWithValue("id", 1L)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Employee created");
     }
 
     @Test
     void constructorWithoutId_ShouldCreateActivity() {
         Activity activity = new Activity(NOW, "Employee created");
-        assertThat(activity.getId()).isNull();
-        assertThat(activity.getOccurredAt()).isEqualTo(NOW);
-        assertThat(activity.getEvent()).isEqualTo("Employee created");
+        assertThat(activity)
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Employee created");
     }
 
     @Test

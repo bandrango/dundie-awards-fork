@@ -39,12 +39,13 @@ class EmployeeMapperUnitTest {
 
         EmployeeDTO dto = employeeMapper.toDTO(employee);
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.getId()).isEqualTo(10L);
-        assertThat(dto.getFirstName()).isEqualTo("John");
-        assertThat(dto.getLastName()).isEqualTo("Doe");
-        assertThat(dto.getDundieAwards()).isEqualTo(5);
-        assertThat(dto.getOrganization()).isEqualTo(organizationDTO);
+        assertThat(dto)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", 10L)
+            .hasFieldOrPropertyWithValue("firstName", "John")
+            .hasFieldOrPropertyWithValue("lastName", "Doe")
+            .hasFieldOrPropertyWithValue("dundieAwards", 5)
+            .hasFieldOrPropertyWithValue("organization", organizationDTO);
         verify(organizationMapper).toDTO(organization);
     }
 
@@ -62,12 +63,13 @@ class EmployeeMapperUnitTest {
 
         Employee employee = employeeMapper.toDomain(dto);
 
-        assertThat(employee).isNotNull();
-        assertThat(employee.getId()).isEqualTo(20L);
-        assertThat(employee.getFirstName()).isEqualTo("Jane");
-        assertThat(employee.getLastName()).isEqualTo("Smith");
-        assertThat(employee.getDundieAwards()).isEqualTo(8);
-        assertThat(employee.getOrganization()).isEqualTo(organization);
+        assertThat(employee)
+            .isNotNull()
+            .hasFieldOrPropertyWithValue("id", 20L)
+            .hasFieldOrPropertyWithValue("firstName", "Jane")
+            .hasFieldOrPropertyWithValue("lastName", "Smith")
+            .hasFieldOrPropertyWithValue("dundieAwards", 8)
+            .hasFieldOrPropertyWithValue("organization", organization);
         verify(organizationMapper).toDomain(organizationDTO);
     }
 

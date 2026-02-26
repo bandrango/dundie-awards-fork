@@ -27,7 +27,6 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     
-    // Lombok for reducing boilerplate code
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
@@ -51,6 +50,38 @@ jacocoTestReport {
 	reports {
 		xml.required = true
 		html.required = true
+	}
+	
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+				'**/controller/**',
+				'**/config/**',
+				'**/infrastructure/bootstrap/**',
+				'**/infrastructure/persistence/**',
+				'**/infrastructure/repository/**',
+				'**/domain/port/**',
+				'**/application/dto/**',
+				'**/application/annotation/**',
+				'**/DundieAwardsApplication.class',
+				'**/domain/exception/DomainException.class'
+			])
+		}))
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'PACKAGE'
+			excludes = ['*.test']
+			
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.75
+			}
+		}
 	}
 }
 

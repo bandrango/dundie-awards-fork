@@ -56,8 +56,8 @@ class EmployeeApplicationServiceUnitTest {
         List<EmployeeDTO> result = employeeService.getAllEmployees();
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getFirstName()).isEqualTo("John");
-        assertThat(result.get(1).getFirstName()).isEqualTo("Jane");
+        assertThat(result.get(0)).hasFieldOrPropertyWithValue("firstName", "John");
+        assertThat(result.get(1)).hasFieldOrPropertyWithValue("firstName", "Jane");
         verify(employeeRepository).findAll();
     }
 
@@ -99,8 +99,9 @@ class EmployeeApplicationServiceUnitTest {
 
         EmployeeDTO result = employeeService.createEmployee(request);
 
-        assertThat(result.getFirstName()).isEqualTo("John");
-        assertThat(result.getLastName()).isEqualTo("Doe");
+        assertThat(result)
+            .hasFieldOrPropertyWithValue("firstName", "John")
+            .hasFieldOrPropertyWithValue("lastName", "Doe");
         verify(employeeRepository).save(any(Employee.class));
     }
 
@@ -118,7 +119,8 @@ class EmployeeApplicationServiceUnitTest {
 
         EmployeeDTO result = employeeService.updateEmployee(EMPLOYEE_ID, request);
 
-        assertThat(result.getFirstName()).isEqualTo("Jane");
+        assertThat(result)
+            .hasFieldOrPropertyWithValue("firstName", "Jane");
         verify(employeeRepository).update(any(Employee.class));
     }
 

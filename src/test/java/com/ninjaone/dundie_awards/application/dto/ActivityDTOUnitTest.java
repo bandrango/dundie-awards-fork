@@ -13,17 +13,19 @@ class ActivityDTOUnitTest {
     @Test
     void noArgsConstructor_ShouldCreateEmptyDTO() {
         ActivityDTO dto = new ActivityDTO();
-        assertThat(dto.getId()).isNull();
-        assertThat(dto.getOccurredAt()).isNull();
-        assertThat(dto.getEvent()).isNull();
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", null)
+            .hasFieldOrPropertyWithValue("occurredAt", null)
+            .hasFieldOrPropertyWithValue("event", null);
     }
 
     @Test
     void allArgsConstructor_ShouldPopulateAllFields() {
         ActivityDTO dto = new ActivityDTO(1L, NOW, "Employee created | Employee.create()");
-        assertThat(dto.getId()).isEqualTo(1L);
-        assertThat(dto.getOccurredAt()).isEqualTo(NOW);
-        assertThat(dto.getEvent()).isEqualTo("Employee created | Employee.create()");
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", 1L)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Employee created | Employee.create()");
     }
 
     @Test
@@ -33,9 +35,10 @@ class ActivityDTOUnitTest {
         dto.setOccurredAt(NOW);
         dto.setEvent("Employee updated | Employee.update()");
 
-        assertThat(dto.getId()).isEqualTo(5L);
-        assertThat(dto.getOccurredAt()).isEqualTo(NOW);
-        assertThat(dto.getEvent()).isEqualTo("Employee updated | Employee.update()");
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("id", 5L)
+            .hasFieldOrPropertyWithValue("occurredAt", NOW)
+            .hasFieldOrPropertyWithValue("event", "Employee updated | Employee.update()");
     }
 
     @Test

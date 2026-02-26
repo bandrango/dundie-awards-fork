@@ -145,10 +145,11 @@ class ActivityDTOMethodsUnitTest {
         
         ActivityDTO dto = new ActivityDTO(1L, now, completeEvent);
         
-        assertThat(dto.getAction()).isEqualTo("Employee created");
-        assertThat(dto.getMethodReference()).isEqualTo("com.ninjaone.dundie_awards.domain.entity.Employee.save()");
-        assertThat(dto.getFormattedOccurredAt()).isEqualTo("2026-02-25 09:30:15");
-        assertThat(dto.getFormattedTime()).isEqualTo("09:30:15");
-        assertThat(dto.getFormattedDate()).isEqualTo("2026-02-25");
+        assertThat(dto)
+            .hasFieldOrPropertyWithValue("action", "Employee created")
+            .hasFieldOrPropertyWithValue("methodReference", "com.ninjaone.dundie_awards.domain.entity.Employee.save()")
+            .hasFieldOrPropertyWithValue("formattedOccurredAt", "2026-02-25 09:30:15")
+            .hasFieldOrPropertyWithValue("formattedTime", "09:30:15")
+            .hasFieldOrPropertyWithValue("formattedDate", "2026-02-25");
     }
 }

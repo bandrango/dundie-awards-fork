@@ -12,13 +12,14 @@ class ActivityPageDTOUnitTest {
     @Test
     void noArgsConstructor_ShouldCreateEmptyPageDTO() {
         ActivityPageDTO pageDTO = new ActivityPageDTO();
-        assertThat(pageDTO.getContent()).isNull();
-        assertThat(pageDTO.getPageNumber()).isEqualTo(0);
-        assertThat(pageDTO.getPageSize()).isEqualTo(0);
-        assertThat(pageDTO.getTotalElements()).isEqualTo(0);
-        assertThat(pageDTO.getTotalPages()).isEqualTo(0);
-        assertThat(pageDTO.isHasNext()).isFalse();
-        assertThat(pageDTO.isHasPrevious()).isFalse();
+        assertThat(pageDTO)
+            .hasFieldOrPropertyWithValue("content", null)
+            .hasFieldOrPropertyWithValue("pageNumber", 0)
+            .hasFieldOrPropertyWithValue("pageSize", 0)
+            .hasFieldOrPropertyWithValue("totalElements", 0L)
+            .hasFieldOrPropertyWithValue("totalPages", 0)
+            .hasFieldOrPropertyWithValue("hasNext", false)
+            .hasFieldOrPropertyWithValue("hasPrevious", false);
     }
 
     @Test
@@ -29,13 +30,14 @@ class ActivityPageDTOUnitTest {
 
         ActivityPageDTO pageDTO = new ActivityPageDTO(content, 0, 20, 50, 3, true, false);
 
-        assertThat(pageDTO.getContent()).isEqualTo(content);
-        assertThat(pageDTO.getPageNumber()).isEqualTo(0);
-        assertThat(pageDTO.getPageSize()).isEqualTo(20);
-        assertThat(pageDTO.getTotalElements()).isEqualTo(50);
-        assertThat(pageDTO.getTotalPages()).isEqualTo(3);
-        assertThat(pageDTO.isHasNext()).isTrue();
-        assertThat(pageDTO.isHasPrevious()).isFalse();
+        assertThat(pageDTO)
+            .hasFieldOrPropertyWithValue("content", content)
+            .hasFieldOrPropertyWithValue("pageNumber", 0)
+            .hasFieldOrPropertyWithValue("pageSize", 20)
+            .hasFieldOrPropertyWithValue("totalElements", 50L)
+            .hasFieldOrPropertyWithValue("totalPages", 3)
+            .hasFieldOrPropertyWithValue("hasNext", true)
+            .hasFieldOrPropertyWithValue("hasPrevious", false);
     }
 
     @Test
@@ -53,13 +55,14 @@ class ActivityPageDTOUnitTest {
         pageDTO.setHasNext(false);
         pageDTO.setHasPrevious(true);
 
-        assertThat(pageDTO.getContent()).isEqualTo(content);
-        assertThat(pageDTO.getPageNumber()).isEqualTo(1);
-        assertThat(pageDTO.getPageSize()).isEqualTo(20);
-        assertThat(pageDTO.getTotalElements()).isEqualTo(100);
-        assertThat(pageDTO.getTotalPages()).isEqualTo(5);
-        assertThat(pageDTO.isHasNext()).isFalse();
-        assertThat(pageDTO.isHasPrevious()).isTrue();
+        assertThat(pageDTO)
+            .hasFieldOrPropertyWithValue("content", content)
+            .hasFieldOrPropertyWithValue("pageNumber", 1)
+            .hasFieldOrPropertyWithValue("pageSize", 20)
+            .hasFieldOrPropertyWithValue("totalElements", 100L)
+            .hasFieldOrPropertyWithValue("totalPages", 5)
+            .hasFieldOrPropertyWithValue("hasNext", false)
+            .hasFieldOrPropertyWithValue("hasPrevious", true);
     }
 
     @Test
