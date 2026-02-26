@@ -1,17 +1,10 @@
 package com.ninjaone.dundie_awards.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-import com.ninjaone.dundie_awards.model.Employee;
-import com.ninjaone.dundie_awards.repository.ActivityRepository;
-import com.ninjaone.dundie_awards.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,74 +12,111 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping()
+import com.ninjaone.dundie_awards.application.annotation.RateLimit;
+import com.ninjaone.dundie_awards.application.dto.CreateEmployeeRequest;
+import com.ninjaone.dundie_awards.application.dto.EmployeeDTO;
+import com.ninjaone.dundie_awards.application.dto.UpdateEmployeeRequest;
+import com.ninjaone.dundie_awards.application.service.EmployeeApplicationService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * Employee REST Controller
+ * 
+ * API Versions:
+ * - /employees (legacy, deprecated)
+ * - /api/v1/employees (current, recommended)
+ */
+@RestController
+@RequestMapping({"/api/v1/employees"})
+@RequiredArgsConstructor
+@Tag(name = "Employees", description = "Employee management API endpoints")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+    private final EmployeeApplicationService employeeService;
 
-    @Autowired
-    private ActivityRepository activityRepository;
-
-    // get all employees
-    @GetMapping("/employees")
-    @ResponseBody
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    /**
+     * GET - Retrieve all employees
+     */
+    @GetMapping
+    @RateLimit(maxRequests = 30, timeWindowSeconds = 60)
+    @Operation(summary = "Get all employees", description = "Retrieves a list of all employees in the system")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved employees"),
+        @ApiResponse(responseCode = "429", description = "Too many requests - rate limit exceeded"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
     }
 
-    // create employee rest api
-    @PostMapping("/employees")
-    @ResponseBody
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+    /**
+     * POST - Create new employee
+     */
+    @PostMapping
+    @Operation(summary = "Create a new employee", description = "Creates a new employee and assigns them to an organization")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Employee created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input - missing or empty required fields"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody CreateEmployeeRequest request) {
+        EmployeeDTO createdEmployee = employeeService.createEmployee(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
     }
 
-    // get employee by id rest api
-    @GetMapping("/employees/{id}")
-    @ResponseBody
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        if (optionalEmployee.isPresent()) {
-            return ResponseEntity.ok(optionalEmployee.get());
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    /**
+     * GET - Retrieve employee by ID
+     */
+    @GetMapping("/{id}")
+    @Operation(summary = "Get employee by ID", description = "Retrieves a specific employee by their ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved employee"),
+        @ApiResponse(responseCode = "404", description = "Employee not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
+        EmployeeDTO employee = employeeService.getEmployeeById(id);
+        return ResponseEntity.ok(employee);
     }
 
-    // update employee rest api
-    @PutMapping("/employees/{id}")
-    @ResponseBody
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        if (!optionalEmployee.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Employee employee = optionalEmployee.get();
-        employee.setFirstName(employeeDetails.getFirstName());
-        employee.setLastName(employeeDetails.getLastName());
-
-        Employee updatedEmployee = employeeRepository.save(employee);
+    /**
+     * PUT - Update employee
+     */
+    @PutMapping("/{id}")
+    @Operation(summary = "Update an employee", description = "Updates an existing employee's first and last name")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Employee updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input - missing or empty required fields"),
+        @ApiResponse(responseCode = "404", description = "Employee not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<EmployeeDTO> updateEmployee(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateEmployeeRequest request) {
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(id, request);
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    // delete employee rest api
-    @DeleteMapping("/employees/{id}")
-    @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        if (!optionalEmployee.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Employee employee = optionalEmployee.get();
-        employeeRepository.delete(employee);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
+    /**
+     * DELETE - Delete employee
+     */
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete an employee", description = "Deletes an employee from the system")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Employee deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Employee not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 }

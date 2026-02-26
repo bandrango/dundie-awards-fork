@@ -1,39 +1,61 @@
 springdoc:
   api-docs:
     path: /openapi
+
 server:
-  port: 3000
+  port: ${SERVER_PORT:3000}
 
 spring:
-  spring:
-    datasource:
-      url: jdbc:h2:mem:mydb
-      username: sa
-      password: password
-      driverClassName: org.h2.Driver
-    jpa:
-      spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/postgres
-#    username: postgres
-#    password: postgres
-#  jpa:
-#    show-sql: true
-#    properties:
-#      ## Hibernate Properties
-#      # The SQL dialect makes Hibernate generate better SQL for the chosen database
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#    # Hibernate ddl auto (create, create-drop, validate, update)
-#    hibernate:
-#      ddl-auto: update
-  thymeleaf: # Thymeleaf
-    cache: false
-    mode: HTML
-    encoding: UTF-8
-    prefix: file:src/main/resources/static/
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:mem:mydb}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:password}
+    driver-class-name: ${DATABASE_DRIVER:org.h2.Driver}
+
+  jpa:
+    database-platform: ${JPA_DATABASE_PLATFORM:org.hibernate.dialect.H2Dialect}
+
+  thymeleaf:
+    cache: ${THYMELEAF_CACHE:false}
+    mode: ${THYMELEAF_MODE:HTML}
+    encoding: ${THYMELEAF_ENCODING:UTF-8}
+    prefix: ${THYMELEAF_PREFIX:file:src/main/resources/static/}
+
   web:
     resources:
-      static-locations: file:src/main/resources/static/
+      static-locations: ${WEB_STATIC_LOCATIONS:file:src/main/resources/static/}
       cache:
-        period: 0
+        period: ${WEB_CACHE_PERIOD:0}
+
+management:
+  endpoints:
+    web:
+      base-path: ${ACTUATOR_BASE_PATH:/actuator}
+      exposure:
+        include: ${ACTUATOR_ENDPOINTS:health,info,metrics,env,configprops,loggers,threaddump,heapdump,mappings}
+  endpoint:
+    health:
+      probes:
+        enabled: ${ACTUATOR_HEALTH_PROBES:true}
+      show-details: ${ACTUATOR_HEALTH_SHOW_DETAILS:when_authorized}
+  info:
+    env:
+      enabled: ${ACTUATOR_INFO_ENV:true}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.ninjaone: ${LOG_LEVEL_APP:DEBUG}
+    org.springframework: ${LOG_LEVEL_SPRING:INFO}
+    org.hibernate: ${LOG_LEVEL_HIBERNATE:WARN}
+  pattern:
+    console: ${LOG_PATTERN:"%d{ISO8601} [%thread] %-5level %logger{36} - %msg%n"}
+
+# Application-specific configuration
+app:
+  pagination:
+    default-page-size: ${PAGINATION_DEFAULT_SIZE:10}
+    activity-default-size: ${PAGINATION_ACTIVITY_DEFAULT_SIZE:20}
+    activity-max-size: ${PAGINATION_ACTIVITY_MAX_SIZE:100}
+  rate-limit:
+    enabled: ${RATE_LIMIT_ENABLED:false}

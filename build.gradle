@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id "org.sonarqube" version "4.4.1.3373"
+	id "jacoco"
 }
 
 group = 'com.ninjaone'
@@ -19,6 +21,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -26,4 +39,47 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.10"
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+	}
+	
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+				'**/controller/**',
+				'**/config/**',
+				'**/infrastructure/bootstrap/**',
+				'**/infrastructure/persistence/**',
+				'**/infrastructure/repository/**',
+				'**/domain/port/**',
+				'**/application/dto/**',
+				'**/application/annotation/**',
+				'**/DundieAwardsApplication.class',
+				'**/domain/exception/DomainException.class'
+			])
+		}))
+	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "dundie-awards"
+		property "sonar.organization", System.getenv('SONAR_ORGANIZATION') ?: 'bandrango'
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.token", System.getenv('SONAR_TOKEN') ?: 'bf1d75ea55a8b917c503b6450de47fd47fc25e25'
+		property "sonar.scm.exclusions.disabled", "true"
+	}
+}
+
+tasks.named('sonar') {
+	dependsOn jacocoTestReport
 }
