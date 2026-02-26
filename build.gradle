@@ -60,9 +60,10 @@ sonar {
 		property "sonar.organization", System.getenv('SONAR_ORGANIZATION') ?: 'bandrango'
 		property "sonar.host.url", "https://sonarcloud.io"
 		property "sonar.token", System.getenv('SONAR_TOKEN') ?: 'bf1d75ea55a8b917c503b6450de47fd47fc25e25'
+		property "sonar.scm.exclusions.disabled", "true"
 	}
 }
 
-tasks.sonar {
+tasks.named('sonar') {
 	dependsOn jacocoTestReport
 }
