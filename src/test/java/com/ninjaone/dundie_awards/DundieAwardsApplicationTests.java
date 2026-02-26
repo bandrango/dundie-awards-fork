@@ -30,8 +30,9 @@ class DundieAwardsApplicationTests {
 	@Test
 	void testGetAllEmployees() {
 		List<EmployeeDTO> employees = employeeService.getAllEmployees();
-		assertThat(employees).isNotNull();
-		assertThat(employees.size()).isGreaterThan(0);
+		assertThat(employees)
+			.isNotNull()
+			.hasSizeGreaterThan(0);
 	}
 
 	@Test

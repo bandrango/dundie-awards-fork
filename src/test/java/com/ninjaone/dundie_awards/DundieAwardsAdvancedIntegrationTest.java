@@ -27,8 +27,9 @@ class DundieAwardsAdvancedIntegrationTest {
     @Test
     void getAllEmployees_ShouldReturnList() {
         var employees = employeeService.getAllEmployees();
-        assertThat(employees).isNotNull();
-        assertThat(employees.size()).isGreaterThan(0);
+        assertThat(employees)
+            .isNotNull()
+            .hasSizeGreaterThan(0);
     }
 
     @Test
