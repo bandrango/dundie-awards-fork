@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ninjaone.dundie_awards.application.annotation.RateLimit;
 import com.ninjaone.dundie_awards.application.dto.CreateEmployeeRequest;
 import com.ninjaone.dundie_awards.application.dto.EmployeeDTO;
 import com.ninjaone.dundie_awards.application.dto.UpdateEmployeeRequest;
@@ -44,9 +45,11 @@ public class EmployeeController {
      * GET - Retrieve all employees
      */
     @GetMapping
+    @RateLimit(maxRequests = 30, timeWindowSeconds = 60)
     @Operation(summary = "Get all employees", description = "Retrieves a list of all employees in the system")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved employees"),
+        @ApiResponse(responseCode = "429", description = "Too many requests - rate limit exceeded"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {

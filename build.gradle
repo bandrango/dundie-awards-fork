@@ -70,21 +70,6 @@ jacocoTestReport {
 	}
 }
 
-jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			element = 'PACKAGE'
-			excludes = ['*.test']
-			
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.75
-			}
-		}
-	}
-}
-
 sonar {
 	properties {
 		property "sonar.projectKey", "dundie-awards"

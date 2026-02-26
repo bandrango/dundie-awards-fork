@@ -57,3 +57,5 @@ app:
     default-page-size: ${PAGINATION_DEFAULT_SIZE:10}
     activity-default-size: ${PAGINATION_ACTIVITY_DEFAULT_SIZE:20}
     activity-max-size: ${PAGINATION_ACTIVITY_MAX_SIZE:100}
+  rate-limit:
+    enabled: ${RATE_LIMIT_ENABLED:false}
